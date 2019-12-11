@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?> <!DOCTYPE configuration    PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+    <!--&lt;!&ndash;配置环境&ndash;&gt;-->
+    <!--<environments default="mysql">-->
+        <!--<environment id="mysql">-->
+            <!--<transactionManager type="JDBC"/>-->
+            <!--<dataSource type="POOLED">-->
+                <!--<property name="driver" value="com.mysql.jdbc.Driver"/>-->
+                <!--<property name="url" value="jdbc:mysql:///ssm"/>-->
+                <!--<property name="username" value="root"/>-->
+                <!--<property name="password" value="root"/>-->
+            <!--</dataSource>-->
+        <!--</environment>-->
+    <!--</environments>-->
+
+    <!--<mappers>-->
+        <!--&lt;!&ndash; 使用的是注解 &ndash;&gt;-->
+        <!--&lt;!&ndash; <mapper class="cn.itcast.dao.AccountDao"/> &ndash;&gt;-->
+
+        <!--&lt;!&ndash; 该包下所有的dao接口都可以使用 &ndash;&gt;-->
+        <!--<package name="cn.itcast.dao"/>-->
+    <!--</mappers>-->
+
+
+    <!--这个只是在配置MyBatis配置文件时的需要  到时候Spring整合MyBatis时这个配置文件就不需要了-->
+</configuration>

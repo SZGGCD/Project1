@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/security
+    http://www.springframework.org/schema/security/spring-security.xsd ">
+
+
+    <!--开启spring-security的注解   其中有三个注解需要了解-->
+    <security:global-method-security pre-post-annotations="enabled" jsr250-annotations="enabled" secured-annotations="enabled"></security:global-method-security>
+
+
+    <!-- 配置不拦截的资源 -->
+    <security:http pattern="/login.jsp" security="none"/>
+    <security:http pattern="/failer.jsp" security="none"/>
+    <security:http pattern="/css/**" security="none"/>
+    <security:http pattern="/img/**" security="none"/>
+    <security:http pattern="/plugins/**" security="none"/>
+    <!--
+    	配置具体的规则
+    	auto-config="true"	不用自己编写登录的页面，框架提供默认登录页面
+    	use-expressions="false"	是否使用SPEL表达式（没学习过）
+    -->
+    <!--<security:http auto-config="true" use-expressions="false">-->
+        <!--  这个是false情况的配置代码  配置具体的拦截的规则 pattern="请求路径的规则" access="访问系统的人，必须有ROLE_USER的角色" -->
+        <!--<security:intercept-url pattern="/**" access="ROLE_USER,ROLE_ADMIN"/>-->
+
+    <security:http auto-config="true" use-expressions="true">
+        <!--   这个是true情况的配置代码  配置具体的拦截的规则 pattern="请求路径的规则" access="访问系统的人，必须有ROLE_USER的角色" -->
+        <security:intercept-url pattern="/**" access="hasAnyRole('ROLE_USER','ROLE_ADMIN')"/>
+
+        <!-- 定义跳转的具体的页面 -->
+        <security:form-login
+                login-page="/login.jsp"
+                login-processing-url="/login.do"
+                default-target-url="/index.jsp"
+                authentication-failure-url="/failer.jsp"
+                authentication-success-forward-url="/pages/main.jsp"
+        />
+
+        <!-- 关闭跨域请求 -->
+        <security:csrf disabled="true"/>
+        <!-- 退出   指定销毁session -->
+        <security:logout invalidate-session="true" logout-url="/logout.do" logout-success-url="/login.jsp"/>
+
+    </security:http>
+
+    <!-- 切换成数据库中的用户名和密码 -->
+    <security:authentication-manager>
+        <security:authentication-provider user-service-ref="userService">
+            <!--配置加密的方式-->
+            <security:password-encoder ref="passwordEncoder"/>
+        </security:authentication-provider>
+    </security:authentication-manager>
+
+    <!-- 配置加密类 -->
+    <bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+
+    <!--这个是SPEL表达式为false时，但是你还是要用SPEL表达式时，这个是你要开启的bean配置-->
+    <!--<bean id="webexpressionHandler" class="org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler"/>-->
+
+    <!-- 提供了入门的方式，在内存中存入用户名和密码
+    <security:authentication-manager>
+    	<security:authentication-provider>
+    		<security:user-service>
+    			<security:user name="admin" password="{noop}admin" authorities="ROLE_USER"/>
+    		</security:user-service>
+    	</security:authentication-provider>
+    </security:authentication-manager>
+    -->
+
+    <!--<security:http auto-config="true" use-expressions="false">-->
+        <!--&lt;!&ndash; intercept-url定义一个过滤规则 pattern表示对哪些url进行权限控制，-->
+                 <!--ccess属性表示在请求对应 的URL时需要什么权限，             -->
+                 <!--默认配置时它应该是一个以逗号分隔的角色列表，-->
+                 <!--请求的用户只需拥有其中的一个角色就能成功访问对应 的URL &ndash;&gt;-->
+      <!---->
+        <!--<security:intercept-url pattern="/**"-->
+                                <!--access="ROLE_USER"/>        -->
+                                <!--&lt;!&ndash; auto-config配置后，不-->
+                                <!--需要在配置下面信息 <security:form-login /> 定义登录表单信息 <security:http-basic             /> -->
+                                <!--<security:logout /> &ndash;&gt;-->
+    <!--</security:http>-->
+
+    <!--<security:authentication-manager>-->
+        <!--<security:authentication-provider>-->
+            <!--<security:user-service>-->
+                <!--<security:user name="user" password="{noop}user" authorities="ROLE_USER"/>-->
+                <!--<security:user name="admin" password="{noop}admin" authorities="ROLE_ADMIN"/>-->
+            <!--</security:user-service>-->
+        <!--</security:authentication-provider>-->
+    <!--</security:authentication-manager>-->
+
+</beans>
+
+
+
+
